@@ -1,14 +1,14 @@
 ﻿var attendees = new Array();
 var attendeeCount = 0;
 
-$(document).ready(function ($) {
-    $("#chooseWinner").click(function (e) {
+$(document).ready(function($) {
+    $("#chooseWinner").click(function(e) {
         e.preventDefault;
         chooseWinnerId();
         return false;
     });
 
-    $("#findEvent").click(function (e) {
+    $("#findEvent").click(function(e) {
         e.preventDefault;
         getEventDetails($("#eventUrl").val());
         return false;
@@ -19,24 +19,32 @@ $(document).ready(function ($) {
 var meetupService = new function() {
     var serviceBase = 'https://api.meetup.com',
         getEvent = function(eventId, callback) {
-            $.getJSON(serviceBase + '/2/event/' + eventId + '?callback=?', { key: apiKey }, function (data) {
+            $.getJSON(serviceBase + '/2/event/' + eventId + '?callback=?', {
+                key: apiKey
+            }, function(data) {
                 callback(data);
             });
         },
         getWinnerDetails = function(userId, callback) {
-            $.getJSON(serviceBase + '/2/member/' + userId + '?callback=?', { key: apiKey }, function (data) {
+            $.getJSON(serviceBase + '/2/member/' + userId + '?callback=?', {
+                key: apiKey
+            }, function(data) {
                 callback(data);
             });
         },
         getRsvps = function(eventId, rsvp, callback) {
-            $.getJSON(serviceBase + '/2/rsvps?callback=?', { key : apiKey, rsvp : 'yes', event_id : eventId }, function(data) {
+            $.getJSON(serviceBase + '/2/rsvps?callback=?', {
+                key: apiKey,
+                rsvp: 'yes',
+                event_id: eventId
+            }, function(data) {
                 callback(data);
             });
         };
 
     return {
         getEvent: getEvent,
-        getRsvps : getRsvps,
+        getRsvps: getRsvps,
         getWinnerDetails: getWinnerDetails
     };
 }();
@@ -46,7 +54,7 @@ function getEventDetails(eventUrl) {
     var eventId = $.url(eventUrl).segment(2);
     attendees.length = 0;
     //winners.length = 0;
-    if(eventId != null) {
+    if (eventId != null) {
         $('#main').show();
         meetupService.getEvent(eventId, function(data) {
             var list = $('#eventList');
@@ -86,7 +94,7 @@ function chooseWinnerId() {
     var userId = attendees[randomRsvp];
     //console.log('user id=' + userId);
     getWinnerDetails(userId);
-    attendees = $.grep(attendees, function (value) {
+    attendees = $.grep(attendees, function(value) {
         return value != userId;
     });
     //console.log("attendees length=" + attendees.length);
